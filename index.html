@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0d1b2a">
+<link rel="manifest" href="manifest.json">
+<title>🔭 市场透视</title><style>:root{--bg:#0d1b2a;--bg2:#12263f;--card:#16304d;--gold:#e8c872;--gold2:#c9a24d;
+--txt:#e8eef5;--sub:#8fa3b8;--line:#23415f;--red:#e06c60;--green:#7bc98a;--blue:#6ea8d8;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--txt);font-family:"PingFang SC","Microsoft YaHei",sans-serif;min-height:100vh;padding-bottom:70px}
+.wrap{max-width:760px;margin:0 auto;padding:14px}
+h1{font-size:21px;letter-spacing:3px;color:var(--gold);text-align:center;padding:14px 0 4px}
+.sub{text-align:center;color:var(--sub);font-size:12px;padding-bottom:12px}
+.tabs{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--line);display:flex;z-index:99;height:58px}
+.tabs button{flex:1;background:none;border:none;color:var(--sub);font-size:11px;padding:6px 0 2px;cursor:pointer}
+.tabs button.on{color:var(--gold)}
+.tabs button .ic{font-size:19px;display:block;margin-bottom:2px}
+.page{display:none}.page.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.card h3{color:var(--gold);font-size:15px;margin-bottom:10px;letter-spacing:1px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+input,select,textarea{background:var(--bg);border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:9px 10px;font-size:14px;width:100%;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+textarea{resize:vertical;min-height:64px}
+.btn{background:linear-gradient(135deg,#1a2f47,#25405f);color:var(--gold);border:1px solid var(--gold2);border-radius:9px;padding:9px 16px;font-size:14px;cursor:pointer}
+.btn:active{opacity:.75}.btn.gold{background:linear-gradient(135deg,#8a6a2f,#b8934a);color:#fff;border:none}
+.btn.sm{padding:5px 10px;font-size:12px}.btn.red{border-color:var(--red);color:var(--red);background:none}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stat{background:var(--bg);border-radius:10px;padding:10px;text-align:center}
+.stat b{display:block;font-size:18px;color:var(--gold)}.stat span{font-size:11px;color:var(--sub)}
+.item{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:13px}
+.item .m{font-size:11px;color:var(--sub);margin-top:4px}
+.tag{display:inline-block;font-size:10px;background:#1c3a5e;color:var(--gold);border-radius:6px;padding:2px 7px;margin:2px 4px 2px 0}
+.tag.warn{background:#5e2a1c;color:#f0a090}.tag.ok{background:#1c4d33;color:#8fe0a8}
+.empty{color:var(--sub);text-align:center;padding:20px;font-size:13px}
+pre{white-space:pre-wrap;word-break:break-all;font-size:12px;line-height:1.9;background:var(--bg);padding:10px;border-radius:8px;max-height:400px;overflow:auto}
+a{color:var(--blue)}
+@media(min-width:760px){.tabs{max-width:760px;margin:0 auto}}
+</style></head>
+<body><div class="wrap">
+<h1>🔭 市场透视</h1><div class="sub">12行业公开数据画像 · 老板台账 · 提案生成 ｜ 数据标注来源</div>
+
+<div class="page on" id="p-ind"><div class="card"><h3>🔭 行业库（内置12行业公开数据，可搜）</h3>
+<input id="q" placeholder="搜索行业关键词" oninput="renderInd()" style="margin-bottom:8px">
+<div id="ind-list"></div></div>
+<div class="card" id="ind-detail" style="display:none"><h3 id="d-name"></h3><div id="d-body"></div></div></div>
+
+<div class="page" id="p-boss"><div class="card"><h3>🤝 登记老板/客户</h3>
+<div class="row"><input id="b-name" placeholder="称呼（如 王总）" style="flex:2">
+<select id="b-ind" style="flex:2"></select></div>
+<div class="row"><input id="b-comp" placeholder="公司/品牌" style="flex:2">
+<select id="b-stage" style="flex:1"><option>洽谈中</option><option>方案已发</option><option>执行中</option><option>续费期</option></select></div>
+<input id="b-pain" placeholder="痛点/需求" style="margin-bottom:8px">
+<button class="btn gold" onclick="addBoss()">登记</button></div>
+<div id="boss-list"></div></div>
+
+<div class="page" id="p-pro"><div class="card"><h3>📑 生成合作提案</h3>
+<div class="row"><select id="pr-ind" style="flex:2"></select>
+<input id="pr-boss" placeholder="老板称呼" style="flex:2"></div>
+<div class="row"><input id="pr-svc" placeholder="你卖的服务" value="店播代运营+短视频矩阵" style="flex:3">
+<button class="btn gold" onclick="genPro()" style="flex:1">生成</button></div>
+<div class="row"><input id="pr-price" placeholder="报价(如 8000/月)" value="面议" style="flex:2"></div></div>
+<div class="card"><h3>📄 提案预览（长按全选复制）</h3><pre id="pro-out">点上方按钮生成</pre></div></div>
+
+<div class="page" id="p-me"><div class="card"><h3>⚙️ 数据</h3>
+<div class="row"><button class="btn" onclick="exportData()">📤 导出</button>
+<button class="btn" onclick="document.getElementById('imp').click()">📥 导入</button>
+<input type="file" id="imp" style="display:none" onchange="importData(event)"></div>
+<div style="font-size:12px;color:var(--sub);line-height:2;margin-top:6px">内置数据来自公开研报/统计局并标注年份，谈判前建议再用平台数据核实一遍</div></div></div>
+
+</div>
+<nav class="tabs"><button class="on" onclick="go('ind',this)"><span class="ic">🔭</span>行业库</button><button onclick="go('boss',this)"><span class="ic">🤝</span>老板台账</button><button onclick="go('pro',this)"><span class="ic">📑</span>提案生成</button><button onclick="go('me',this)"><span class="ic">⚙️</span>我的</button></nav>
+<script>
+const K="axing_lens_v1";
+let DB=JSON.parse(localStorage.getItem(K)||'{}');
+function save(){localStorage.setItem(K,JSON.stringify(DB))}
+function today(){return new Date().toISOString().slice(0,10)}
+function now(){return new Date().toLocaleString()}
+function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function go(p,btn){document.querySelectorAll(".page").forEach(e=>e.classList.remove("on"));document.getElementById("p-"+p).classList.add("on");document.querySelectorAll(".tabs button").forEach(e=>e.classList.remove("on"));btn.classList.add("on");window.scrollTo(0,0);if(typeof renderAll==="function")renderAll()}
+function exportData(){const blob=new Blob([JSON.stringify(DB,null,1)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="axing_lens_v1_backup_"+today()+".json";a.click()}
+function importData(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{DB=JSON.parse(r.result);save();renderAll();alert("导入成功")}catch(e){alert("文件不对")}};r.readAsText(f)}
+
+const IND=[{"name": "宠物行业", "scale": "约2800亿(2023,宠物行业白皮书)", "growth": "中高速", "crowd": "25-40岁,女性略多,一二线集中", "need": "情感陪伴;主粮>零食>智能用品", "price": "主粮月100-300;用品30-200", "channel": "抖音种草+天猫信任+私域复购", "season": "换毛季/618/双11/春节寄养", "chance": "小宠异宠;宠物出行;定制挂牌", "risk": "食安舆情;竞争白热化", "service": "①店播代运营 ②测评矩阵 ③私域订阅 ④新品冷启动"}, {"name": "化妆品/美妆", "scale": "约4142亿(2023,统计局限上)", "growth": "稳健", "crowd": "18-35女性;男性护理增速快", "need": "功效护肤主导;成分党理性", "price": "50-200国货主力带", "channel": "抖音自播+达播;小红书口碑", "season": "38节/防晒季4-8月/大促", "chance": "男士理容;银发抗衰;香氛", "risk": "新规备案;流量贵", "service": "①店播代播 ②测评人设号 ③私域会员 ④达播分销"}, {"name": "服装行业", "scale": "约1.4万亿(2023,统计局)", "growth": "低个位", "crowd": "全龄;女装碎片化;运动休闲全龄化", "need": "舒适>潮流;功能面料高增长", "price": "100-500主流带", "channel": "直播吃增量;淘系守搜索", "season": "换季3-4/9-10;双11", "chance": "防晒衣爆发;中老年女装蓝海", "risk": "库存;退货率60%+", "service": "①白牌店播 ②穿搭矩阵 ③退货率优化 ④中老年店群"}, {"name": "鞋类行业", "scale": "约4000亿+(Euromonitor约)", "growth": "平稳", "crowd": "运动15-40;老年鞋60+蓝海", "need": "运动休闲化;舒适健步", "price": "运动200-800;老年鞋100-300", "channel": "得物/滔搏/抖音白牌", "season": "开学季/双11", "chance": "户外风;老人鞋教育成熟", "risk": "龙头集中;白牌价格战", "service": "①老年健步鞋内容 ②工厂店播 ③童鞋开学季"}, {"name": "箱包行业", "scale": "约2000亿+(口径不一)", "growth": "平稳", "crowd": "学生/通勤女/商旅男/旅行", "need": "通勤大容量;轻量化", "price": "女包200-1000", "channel": "淘系+抖音场景内容;跨境", "season": "开学季/春节出行", "chance": "宠物包/骑行包细分", "risk": "同质低价;出口波动", "service": "①白牌店播 ②收纳场景短视频 ③跨境代运营"}, {"name": "饰品行业(含挂饰)", "scale": "珠宝约8000亿+;时尚饰品千亿级(约)", "growth": "时尚饰品快于珠宝", "crowd": "女性15-35核心;功能挂饰全龄", "need": "情绪价值>保值;转运寓意长青", "price": "9.9-59走量;59-199品质", "channel": "抖音快手白牌直播+拼多多走量", "season": "大促/七夕圣诞春节/开学", "chance": "挂饰五线:手机/汽车/钥匙/包包/衣服", "risk": "同质化;IP侵权", "service": "①五线店播矩阵 ②情绪短视频 ③礼赠场景 ④景区文创"}, {"name": "母婴/儿童", "scale": "母婴约3万亿级(口径不一,约)", "growth": "量减价增", "crowd": "25-35宝妈决策;隔代参与", "need": "安全>价格;分龄精细化", "price": "奶粉1000+/月;童装100-300", "channel": "天猫京东信任标品+私域", "season": "开学季/换季/大促", "chance": "大童服饰缺口;儿童户外", "risk": "出生率下行;合规极严", "service": "①私域复购SOP ②分龄内容 ③大童蓝海"}, {"name": "银发/养老", "scale": "银发经济约7万亿(2024,国办意见)", "growth": "政策驱动", "crowd": "60后新老年懂网;失能照护刚需", "need": "健康监测/适老化/文娱旅游", "price": "鞋服100-500;服务数千-数万", "channel": "拼多多/抖音(新老年网购快)+社区", "season": "重阳/春节礼赠", "chance": "适老化改造;老年教育旅游", "risk": "决策链长;信任门槛", "service": "①孝心礼场景号 ②适老用品店播 ③社区团购"}, {"name": "餐饮", "scale": "约5.3万亿(2023,统计局)", "growth": "疫后恢复20%+", "crowd": "全龄;外卖18-35高频", "need": "性价比回归;小吃快餐快", "price": "快餐15-35;茶饮10-20", "channel": "外卖+抖音团购+到店", "season": "夏季夜经济/春节", "chance": "地方小吃连锁化", "risk": "房租人工;食安", "service": "—"}, {"name": "家居/家具", "scale": "家装家居约4.5万亿+(约)", "growth": "中低速", "crowd": "25-45购房/租房;轻改造18-30", "need": "收纳/智能照明/适老改造", "price": "小件50-300;大家具1000+", "channel": "淘系小件+抖音场景", "season": "金三银四装修季/双11", "chance": "智能单品;阳台经济", "risk": "地产拖累", "service": "①收纳细分店播 ②租房改造内容"}, {"name": "AI行业(AIGC)", "scale": "核心产业约5000亿+(2023,工信部约)", "growth": "30%+", "crowd": "开发者+企业主+创作者", "need": "降本增效;数字人;AI培训", "price": "订阅20-200/月;课99-2999", "channel": "内容获客+私域;应用商店", "season": "发布会节点;金三银四", "chance": "垂直小工具;AI培训;企业内训", "risk": "大厂碾压;合规", "service": "①细分场景工具 ②AI培训 ③代运营提效"}, {"name": "短剧行业", "scale": "约374亿(2023)首超电影票房;2024约500亿级", "growth": "爆发", "crowd": "下沉35-55岁女性核心付费", "need": "爽点密集;单集1-2分钟", "price": "单部充值几十-数百", "channel": "小程序/抖音快手;投流驱动", "season": "春节/暑期", "chance": "精品化;免费IAA;出海;AI制作", "risk": "监管备案;投流贵", "service": "①AI短剧工作流 ②品牌定制 ③切片分发"}];
+DB.bosses=DB.bosses||[];
+const opts=IND.map((r,i)=>`<option value="${i}">${r.name}</option>`).join("");
+document.getElementById("b-ind").innerHTML=opts;
+document.getElementById("pr-ind").innerHTML=opts;
+function renderInd(){
+const q=(document.getElementById("q").value||"").trim();
+const list=IND.map((r,i)=>({r,i})).filter(x=>!q||x.r.name.includes(q)||x.r.need.includes(q)||x.r.chance.includes(q));
+document.getElementById("ind-list").innerHTML=list.map(x=>
+`<div class="item" onclick="showInd(${x.i})"><b>${esc(x.r.name)}</b> <span class="tag">${esc(x.r.scale.slice(0,22))}</span>
+<div class="m">机会：${esc(x.r.chance.slice(0,30))}…</div></div>`).join("")||'<div class="empty">没搜到</div>'}
+function showInd(i){const r=IND[i];
+document.getElementById("ind-detail").style.display="block";
+document.getElementById("d-name").textContent="📋 "+r.name;
+const rows=[["规模",r.scale],["增速",r.growth],["人群",r.crowd],["核心需求",r.need],["客单价",r.price],
+["渠道打法",r.channel],["节点日历",r.season],["机会点",r.chance],["风险",r.risk],["服务切入",r.service]];
+document.getElementById("d-body").innerHTML=rows.map(x=>`<div style="margin-bottom:8px"><b style="color:var(--gold)">${x[0]}：</b><span style="font-size:13px">${esc(x[1])}</span></div>`).join("");
+window.scrollTo(0,document.getElementById("ind-detail").offsetTop-10)}
+function addBoss(){const n=document.getElementById("b-name").value.trim();if(!n)return alert("填称呼");
+DB.bosses.unshift({id:Date.now(),name:n,ind:IND[+document.getElementById("b-ind").value].name,
+comp:document.getElementById("b-comp").value.trim(),stage:document.getElementById("b-stage").value,
+pain:document.getElementById("b-pain").value.trim(),logs:[]});
+document.getElementById("b-name").value="";save();renderAll()}
+function addLog(id){const b=DB.bosses.find(b=>b.id===id);const v=prompt(`给【${b.name}】记跟进：`);if(!v)return;
+b.logs.unshift({d:today(),t:v});save();renderAll()}
+function delBoss(id){if(confirm("删除？")){DB.bosses=DB.bosses.filter(b=>b.id!==id);save();renderAll()}}
+function genPro(){const r=IND[+document.getElementById("pr-ind").value];
+const boss=document.getElementById("pr-boss").value.trim()||"X总";
+const svc=document.getElementById("pr-svc").value.trim();
+const price=document.getElementById("pr-price").value.trim();
+document.getElementById("pro-out").textContent=
+`「${r.name}」电商增长提案 · 致${boss}
+
+一、行业机会（数据说话）
+· 市场：${r.scale}
+· 人群：${r.crowd}
+· 机会点：${r.chance}
+
+二、你的现状痛点
+· ${r.channel}
+
+三、解决方案：${svc}
+· 执行要点：${r.service}
+
+四、节奏与节点
+· ${r.season}
+· 首月冷启动 → 第二月放量 → 第三月稳态
+
+五、投入与预期
+· 服务费：${price}
+· 预期：首月以跑通模型为目标，ROI可用保本公式当场测算
+
+—— 本提案由「市场透视」行业库自动生成，数据标注来源可查证`}
+function renderAll(){renderInd();
+document.getElementById("boss-list").innerHTML=DB.bosses.length?DB.bosses.map(b=>
+`<div class="card"><h3>${esc(b.name)} <span style="font-size:11px;color:var(--sub)">${esc(b.ind)} ${esc(b.comp)}</span></h3>
+<span class="tag">${b.stage}</span>${b.pain?`<div class="m" style="margin-top:6px">痛点：${esc(b.pain)}</div>`:""}
+<div style="font-size:12px;color:var(--sub);margin-top:6px">${b.logs.slice(0,3).map(l=>`<div>· ${l.d} ${esc(l.t)}</div>`).join("")||"暂无跟进"}</div>
+<div class="row" style="margin-top:8px"><button class="btn sm" onclick="addLog(${b.id})">＋记跟进</button>
+<button class="btn sm red" onclick="delBoss(${b.id})">删</button></div></div>`).join(""):
+'<div class="card"><div class="empty">登记你服务的老板们</div></div>'}
+renderAll();
+
+if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}
+</script></body></html>

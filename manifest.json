@@ -1,0 +1,21 @@
+{
+ "name": "市场透视",
+ "short_name": "市场透视",
+ "start_url": "./",
+ "display": "standalone",
+ "background_color": "#0d1b2a",
+ "theme_color": "#0d1b2a",
+ "description": "行业画像+老板台账+提案生成",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  }
+ ]
+}
